@@ -1,24 +1,26 @@
 import json
 from datetime import datetime
 
-
 def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
     return data
 
-
-def mask_number(number, mask='XXXX XX** **** XXXX'):
+def mask_number(number, mask_sчет='Счет **1234', mask_карта='Visa Classic 123456******7789'):
     if not number:
         return 'N/A'
-    visible_chars = 6 + 4
-    masked_number = (number[:visible_chars] + mask[-4:]) if len(number) > visible_chars else number
-    return masked_number
 
+    if 'счет' in number.lower() or number.isdigit():
+        return mask_sчет.replace('**', number[-4:])
+    elif 'Visa' in number.lower() or 'Maestro' in number.lower() or 'американ экспресс' in number.lower():
+        parts = number.split()
+        if len(parts) >= 4 and len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 4 and len(parts[3]) == 4:
+            return mask_карта.replace('1234', parts[0]).replace('56**', parts[1] + parts[2]).replace('****', parts[3])
+    return number
 
 def print_last_five_operations(operations):
     executed_operations = sorted([op for op in operations if 'state' in op and op['state'] == 'EXECUTED'],
-                                 key=lambda x: x['date'], reverse=True)[:5]
+                                  key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)[:5]
 
     for op in executed_operations:
         formatted_date = datetime.strptime(op['date'], '%Y-%m-%dT%H:%M:%S.%f').strftime('%d.%m.%Y')
@@ -29,9 +31,3 @@ def print_last_five_operations(operations):
         print(f"{formatted_date} {op['description']}")
         print(f"{masked_from} -> {masked_to}")
         print(f"{operation_amount}\n")
-
-
-# Пример использования функции
-file_path = 'operations.json'
-data = read_json_file(file_path)
-print_last_five_operations(data)
