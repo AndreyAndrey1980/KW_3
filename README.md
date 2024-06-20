@@ -1,7 +1,7 @@
 ## Курсовой проект по курсу «Основы backend-разработки»
 #### Код для виджета «Операции по счетам»
-![img.png](img.png)
-![img_1.png](img_1.png)
+![image](https://github.com/AndreyAndrey1980/KW_3/assets/167214969/fb901e17-4a55-46a1-b4ac-de7f1ddda6e1)
+![image](https://github.com/AndreyAndrey1980/KW_3/assets/167214969/67fe58a3-3505-493c-8aba-d7611f34c329)
 
 ### Виртуальное окружение
 #### Переходим в рабочий каталог, создаем виртуальное окружение
