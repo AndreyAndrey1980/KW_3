@@ -6,23 +6,33 @@ def read_json_file(file_path):
         data = json.load(file)
     return data
 
-def mask_number(number, mask_sчет='Счет **1234', mask_карта='Visa Classic 123456******7789'):
+def mask_number(number, mask_check='Счет **1234', mask_card='Visa Classic 123456******7789'):
     if not number:
         return 'N/A'
 
     if 'счет' in number.lower() or number.isdigit():
-        return mask_sчет.replace('**', number[-4:])
-    elif 'Visa' in number.lower() or 'Maestro' in number.lower() or 'американ экспресс' in number.lower():
+        # Маска номера банковского счета
+        return mask_check.replace('**', number[-4:])
+    else:
+        # Маска номера кредитной карты
         parts = number.split()
-        if len(parts) >= 4 and len(parts[0]) == 4 and len(parts[1]) == 2 and len(parts[2]) == 4 and len(parts[3]) == 4:
-            return mask_карта.replace('1234', parts[0]).replace('56**', parts[1] + parts[2]).replace('****', parts[3])
-    return number
+        card_name = ' '.join(parts[:-1])
+        card_number = parts[-1]
+        # Замаскируйте номер карты, оставив видимыми первые 6 и последние 4 цифры
+        hidden_number = ' '.join([card_number[:6], '*' * 6, card_number[-4:]])
+        return f"{card_name} {hidden_number}"
+
+def filter_by_state(operations, state):
+    return [op for op in operations if 'state' in op and op['state'] == state]
+
+def sort_by_date(operations):
+    return sorted(operations, key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'))
 
 def print_last_five_operations(operations):
-    executed_operations = sorted([op for op in operations if 'state' in op and op['state'] == 'EXECUTED'],
-                                  key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)[:5]
-
-    for op in executed_operations:
+    state = 'EXECUTED'
+    executed_operations = filter_by_state(operations, state)
+    sorted_operations = sort_by_date(executed_operations)
+    for op in sorted_operations[:5]:
         formatted_date = datetime.strptime(op['date'], '%Y-%m-%dT%H:%M:%S.%f').strftime('%d.%m.%Y')
         masked_from = mask_number(op.get('from'))
         masked_to = mask_number(op.get('to'))
