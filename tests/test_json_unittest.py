@@ -17,7 +17,7 @@ class TestFinancialOperations(unittest.TestCase):
             mock_print.assert_not_called()
 
     def test_mask_number(self):
-        # Тестируем маскировку номера
+        #Тестируем маскировку номера
         self.assertEqual(mask_number(''), 'N/A')
 
     def test_print_last_five_operations_with_pending_operations(self):
