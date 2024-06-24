@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from datetime import datetime
-from src.utils import read_json_file, mask_number, print_last_five_operations
+from src.utils import read_json_file, mask_number, print_last_five_operations, filter_by_state
 
 class TestFinancialOperations(unittest.TestCase):
 
