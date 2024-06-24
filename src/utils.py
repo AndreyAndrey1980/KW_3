@@ -5,7 +5,7 @@ def read_json_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         data = json.load(file)
     return data
-  
+
 def mask_number(number, mask_card='**** **** **** ****', mask_account='**** **** ****'):
     if not number:
         return 'N/A'
