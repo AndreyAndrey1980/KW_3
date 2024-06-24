@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from datetime import datetime
-from src.utils import read_json_file, mask_number, print_last_five_operations
+from src.utils import read_json_file, mask_number, print_last_five_operations, filter_by_state
 
 class TestFinancialOperations(unittest.TestCase):
 
@@ -17,7 +17,7 @@ class TestFinancialOperations(unittest.TestCase):
             mock_print.assert_not_called()
 
     def test_mask_number(self):
-        #Тестируем маскировку номера
+        # Тестируем маскировку номера
         self.assertEqual(mask_number(''), 'N/A')
 
     def test_print_last_five_operations_with_pending_operations(self):
